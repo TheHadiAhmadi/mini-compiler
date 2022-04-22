@@ -1,4 +1,4 @@
-import { Token, tokenize } from "./tokenize";
+import { Token } from "./tokenize";
 
 export type ExpressionNode = {
   type: "Expression";

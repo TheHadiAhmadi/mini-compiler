@@ -19,13 +19,13 @@ export function interpreter(ast: Node) {
     }
 
     // function call => 1: fn name, 2, 3, 4, 5,... => arguments
-    function interpretExpression(node: ExpressionNode): string | number | (string|number)[] {
+    function interpretExpression(node: ExpressionNode): any {
         // add,sub,mul,div,print
         if(node.children[0].type === 'String') {
             if(functionsMap.has(node.children[0].value)) {
                 // function call
                 const args: any[] = node.children.slice(1).map(node => interpret(node));
-                return functionsMap.get(node.children[0].value)(args)
+                return functionsMap.get(node.children[0].value)?.(args)
             } else {
                 return node.children.map(interpret)
             }

@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="node_modules/@svind/css/dist/index.css" />
   </head>
   <body id="body" class="page dark">
     <div class="page-wrapper h-full">
       <header class="navbar-header bg-light dark:bg-dark">
-        <a class="navbar-brand">Compiler</a>
+        <a class="navbar-brand">Mini Compiler Playground</a>
 
         <button id="themeButton">
           <svg
@@ -50,65 +49,63 @@
       </header>
       <div class="page-body flex-1 h-1/2">
         <div class="flex flex-row gap-2 h-full">
-          <div class="card z-1 sm:max-w-[70%] flex flex-col h-full overflow-hidden w-full">
+          <div
+            class="card z-1 sm:max-w-[70%] flex flex-col h-full overflow-hidden w-full"
+          >
             <div class="card-header flex">
               <h2 class="card-title flex-1">Input</h2>
 
               <button id="runButton">
-
-
                 <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                aria-hidden="true"
-                role="img"
-                class="icon run w-6 h-6 rounded-full shadow p-1 bg-red"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 16 16"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  aria-hidden="true"
+                  role="img"
+                  class="icon run w-6 h-6 rounded-full shadow p-1 bg-red"
+                  preserveAspectRatio="xMidYMid meet"
+                  viewBox="0 0 16 16"
                 >
-                <path
-                fill="currentColor"
-                d="M14.224 6.687a1.5 1.5 0 0 1 0 2.629l-10 5.499A1.5 1.5 0 0 1 2.003 13.5V2.502a1.5 1.5 0 0 1 2.223-1.314l9.999 5.499Zm-.482 1.752a.5.5 0 0 0 0-.876l-10-5.499a.5.5 0 0 0-.74.438v10.999a.5.5 0 0 0 .74.438l10-5.5Z"
-                ></path>
-              </svg>
-            </button>
+                  <path
+                    fill="currentColor"
+                    d="M14.224 6.687a1.5 1.5 0 0 1 0 2.629l-10 5.499A1.5 1.5 0 0 1 2.003 13.5V2.502a1.5 1.5 0 0 1 2.223-1.314l9.999 5.499Zm-.482 1.752a.5.5 0 0 0 0-.876l-10-5.499a.5.5 0 0 0-.74.438v10.999a.5.5 0 0 0 .74.438l10-5.5Z"
+                  ></path>
+                </svg>
+              </button>
             </div>
             <div class="pl-2 overflow-auto h-full flex">
-              <textarea
-                class="outline-none text-sm"
-                id="inputCode"
-              ></textarea>
+              <textarea class="outline-none text-sm" id="inputCode"></textarea>
             </div>
           </div>
-          <div class="card z-1 !hidden sm:!flex max-w-[70%] flex flex-col h-full overflow-hidden w-full">
+          <div
+            class="card z-1 !hidden sm:!flex max-w-[70%] flex flex-col h-full overflow-hidden w-full"
+          >
             <div class="card-header">
               <h2 class="card-title">AST</h2>
             </div>
             <div class="card-body overflow-auto flex-1">
-              <pre id="astCode">
-
-              </pre>
+              <pre id="astCode"></pre>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="card z-1 mb-2 min-h-[30%] flex flex-col  overflow-hidden w-full">
+      <div
+        class="card z-1 mb-2 min-h-[30%] flex flex-col overflow-hidden w-full"
+      >
         <div class="card-header">
           <h2 class="card-title">Output</h2>
         </div>
         <div class="card-body overflow-auto">
-          <pre id="outputCode">
-
-          </pre>
+          <pre id="outputCode"></pre>
         </div>
       </div>
-  
     </div>
   </body>
 
   <script type="module">
-    import {parse, tokenize, interpreter} from './src/compiler'
+    import { parse, tokenize, interpreter } from "./src/compiler";
+    import "@svind/css/dist/index.css";
+
     function toggleTheme() {
       if (body.classList.contains("dark")) {
         body.classList.remove("dark");
@@ -148,20 +145,19 @@
 (mul (add 1 2) (sub 4 2)) ; same as (1 + 2) * (4 - 2) => 6
 
 (add 1 (add 2 (add 3 (add 4 5)))) ; 1 + (2 + (3 + (4 + 5))))
-`
+`;
 
     function run() {
       // const source = inputCode.value
-      const source = inputCode.value
-      console.log(source)
-      const tokens = tokenize(source)
-      const ast = parse(tokens)
-      console.log(ast)
-      astCode.textContent = JSON.stringify(ast, null, 2)
+      const source = inputCode.value;
+      console.log(source);
+      const tokens = tokenize(source);
+      const ast = parse(tokens);
+      console.log(ast);
+      astCode.textContent = JSON.stringify(ast, null, 2);
 
-      const result = interpreter(ast)
-      outputCode.textContent = result
-
+      const result = interpreter(ast);
+      outputCode.textContent = result;
     }
 
     themeButton.addEventListener("click", toggleTheme);
@@ -184,7 +180,6 @@
     .dark .sun {
       display: block !important;
     }
-
 
     pre {
       line-break: normal;

@@ -1,4 +1,4 @@
-import { Token, tokenize } from "./tokenize.ts";
+import { Token, tokenize } from "./";
 
 export type ExpressionNode = {
   type: "Expression";
@@ -92,7 +92,7 @@ export function parse(tokens: Token[]): RootNode {
   function parseFunctionCall(): FunctionCallNode {
         return {
           type: 'Function',
-          name: next().value,
+          name: next().value as string,
           children: parseArguments() 
         }
       

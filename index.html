@@ -143,32 +143,41 @@
 ; compiler skips all texts after a ';'
 ; this is comment
 ; below line is same as: 3 + 6
-(add 3 6)
+add(3 6)
+add(3, 6) ; comma is optional 
 
 ; you can use below functions
 ; add => adds two value
 ; example: 
-(add 4 2) ; 6
+add (4 2) ; 6
+
+; set => set to a variable
+set(x, 3) ; x = 3
+set(y, add(x 3)) ; y = x + 3
+
+; print => write to output
+print(x) ; 3
+print("Hello World!") ; Hello World!
 
 ; sub => subtract
 ; example: 
-(sub 5 2) ; 7 
+sub (5 2) ; 7 
 
 ; mul => multiple
-(mul 5 2) ; 10
+mul (5 2) ; 10
 
 ; div => divide
-(div 4 2) ; 2
+div (4 2) ; 2
 
 ; print => print
-(print 4) ; 4
-(print hello world) ; hello world
+print (4) ; 4
+print (hello world) ; hello world
 
 ; you can use this for complex calculations
 ; for example 
-(mul (add 1 2) (sub 4 2)) ; same as (1 + 2) * (4 - 2) => 6
+mul(add (1 2) sub (4 2)) ; same as (1 + 2) * (4 - 2) => 6
 
-(add 1 (add 2 (add 3 (add 4 5)))) ; 1 + (2 + (3 + (4 + 5))))
+add(1 add(2 add( 3 add(4 5)))) ; 1 + (2 + (3 + (4 + 5))))
 `;
 
     function run() {

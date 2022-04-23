@@ -2,7 +2,7 @@ import { parse, tokenize } from "../src/compiler";
 
 describe("parser", () => {
   it("should return Node", () => {
-    const testTokens = tokenize("(add 6 4)");
+    const testTokens = tokenize("add(6, 4)");
 
     const ast = parse(testTokens);
     expect(ast.type).toBe("Root");
@@ -10,16 +10,13 @@ describe("parser", () => {
   });
 
   it("sould parse expressions", () => {
-    const testTokens = tokenize("(add 2 5)");
+    const testTokens = tokenize("add (2,5)");
 
     const ast = parse(testTokens);
     expect(ast.children[0]).toMatchObject({
-      type: "Expression",
+      type: "Function",
+      name: 'add',
       children: [
-        {
-          type: "String",
-          value: "add",
-        },
         {
           type: "Number",
           value: 2,
@@ -34,7 +31,7 @@ describe("parser", () => {
 
   it("sould parse a complex expressions", () => {
     const testTokens = tokenize(
-      "(add 2 (sub 5 0 -2 (test 123 42))(ds 123 -24))"
+      "add (2 sub (5 0 -2 test(123 42)) ds (123 -24))"
     );
 
     const ast = parse(testTokens);
@@ -42,23 +39,17 @@ describe("parser", () => {
       type: "Root",
       children: [
         {
-          type: "Expression",
+          type: "Function",
+          name: 'add',
           children: [
-            {
-              type: "String",
-              value: "add",
-            },
             {
               type: "Number",
               value: 2,
             },
             {
-              type: "Expression",
+              type: "Function",
+              name: 'sub',
               children: [
-                  {
-                      type: "String",
-                      value: 'sub'
-                  },
                   {
                       type: "Number",
                       value: 5
@@ -72,12 +63,9 @@ describe("parser", () => {
                       value: -2
                   },
                   {
-                    type: "Expression",
+                    type: "Function",
+                    name: 'test',
                     children: [
-                        {
-                            type: "String",
-                            value: 'test'
-                        },
                         {
                             type: "Number",
                             value: 123
@@ -91,12 +79,9 @@ describe("parser", () => {
               ]
             },
             {
-                type: "Expression",
+                type: "Function",
+                name: 'ds',
                 children: [
-                    {
-                        type: "String",
-                        value: 'ds'
-                    },
                     {
                         type: "Number",
                         value: 123

@@ -1,4 +1,4 @@
-import { Token } from "./tokenize";
+import { Token, tokenize } from "./tokenize.ts";
 
 export type ExpressionNode = {
   type: "Expression";
@@ -15,14 +15,40 @@ export type NumberNode = {
   value: number;
 };
 
-export type RootNode = {
-  type: "Root";
-  children: ExpressionNode[];
+export type FunctionCallNode = {
+  type: "Function";
+  name: string;
+  children: Node[];
 };
 
-export type Node = ExpressionNode | NumberNode | RootNode | StringNode;
+export type RootNode = {
+  type: "Root";
+  children: Node[];
+};
+
+export type EqNode = {
+  type: "Eq";
+  left: ExpressionNode;
+  right: ExpressionNode;
+};
+
+export type IfNode = {
+  type: "If";
+  expression: ExpressionNode;
+  if: Node;
+  else: Node;
+};
+export type Node =
+  | ExpressionNode
+  | NumberNode
+  | RootNode
+  | StringNode
+  | IfNode
+  | FunctionCallNode
+  | EqNode;
 
 export function parse(tokens: Token[]): RootNode {
+  console.log({ tokens });
   function next(): Token {
     return tokens.shift()!;
   }
@@ -31,8 +57,8 @@ export function parse(tokens: Token[]): RootNode {
     return tokens.length > 0;
   }
 
-  function peek(): Token {
-    return tokens[0];
+  function peek(index = 0): Token {
+    return tokens[index];
   }
 
   function parseText(): StringNode {
@@ -49,33 +75,46 @@ export function parse(tokens: Token[]): RootNode {
     };
   }
 
-  function parseExpression(): ExpressionNode {
-    const children: Node[] = [];
-
-    next(); // skip '('
-
+  function parseArguments() {
+    const result = [];
+    next()
     while (hasNext() && !(peek().type === "paren" && peek().value === ")")) {
-      if (peek().type === "paren") {
-        if (peek().value === "(") {
-          children.push(parseExpression());
-        } else if (peek().value === ")") {
-          break;
-        }
-      } else if (peek().type === "text") {
-        children.push(parseText());
-      } else if (peek().type === "number") {
-        children.push(parseNumber());
+      const nextToken = peek();
+      if (nextToken.type === "number") result.push(parseNumber());
+      else if (nextToken.type === "text") {
+        result.push(parseExpression());
       }
     }
-    next(); // skip ')'
-
-    return {
-      type: "Expression",
-      children: children,
-    };
+    next()
+    return result;
   }
 
-  const expressions: ExpressionNode[] = [];
+  function parseFunctionCall(): FunctionCallNode {
+        return {
+          type: 'Function',
+          name: next().value,
+          children: parseArguments() 
+        }
+      
+  }
+
+  function parseExpression(): Node {
+
+    if (peek().type === "text") {
+      if (peek(1).type === "paren" && peek(1).value === "(") {
+        return parseFunctionCall()
+      }
+      else {
+        return parseText()
+      }
+    } else if(peek().type === 'number') {
+      return parseNumber()
+    } else {
+      throw new Error('Not Handled' + JSON.stringify(tokens))
+    }
+  }
+
+  const expressions: Node[] = [];
 
   while (hasNext()) {
     expressions.push(parseExpression());
@@ -86,3 +125,7 @@ export function parse(tokens: Token[]): RootNode {
     children: expressions,
   };
 }
+
+const ast = parse(tokenize("add (1 add(3 2))"));
+console.log(ast)
+console.log(ast.children)

@@ -41,7 +41,7 @@ describe('tokenize', () => {
             value: 'sdf'
         })
 
-        tokens = tokenize('(sdf)ress(');
+        tokens = tokenize('(sdf)"re ss"(');
         console.log(tokens)
         
         expect(tokens).toHaveLength(5)
@@ -52,7 +52,7 @@ describe('tokenize', () => {
 
         expect(tokens[3]).toMatchObject({
             type: 'text',
-            value: 'ress'
+            value: 're ss'
         })
     })
 
@@ -75,6 +75,16 @@ describe('tokenize', () => {
             type: 'number',
             value: -432
 
+        })
+    })
+
+    it('should detect comma', () => {
+        const tokens = tokenize('(add, 1, 3)')
+
+        expect(tokens).toHaveLength(5);
+        expect(tokens[2]).toMatchObject({
+            type: 'number',
+            value: 1
         })
     })
 })

@@ -7,6 +7,11 @@ export type Token =
 function isString(char: string) : boolean {
   return !!char.match(/[A-Z_]/i);
 }
+
+function isQuotedString(char: string): boolean {
+  return char === '"';
+}
+
 function isNumber(char: string) : boolean {
   return !!char.match(/[-0-9]/i);
 }
@@ -44,6 +49,13 @@ export function tokenize(source: string) {
     const char = content[0];
     if (isParenthesis(char)) {
       tokens.push({ type: "paren", value: nextChar() as '(' || ')' });
+    } else if(isQuotedString(char)) {
+      const value = content.substring(1, content.indexOf('"', 1));
+      content = content.slice(value.length + 2) // include length of ""
+      tokens.push({
+        type: 'text',
+        value: value
+      })
     } else if (isString(char)) {
       const value = nextPattern(/\w*/g);
       tokens.push({
@@ -68,3 +80,5 @@ export function tokenize(source: string) {
   }
   return tokens;
 }
+
+console.log(tokenize('"Hello World"'))
